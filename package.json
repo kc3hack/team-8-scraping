@@ -1,0 +1,24 @@
+{
+  "name": "kc3_hack_scraping",
+  "version": "1.0.0",
+  "description": "## 環境構築 今回は さくらVPS 512MB, CentOS7で環境を構築している ### 依存パッケージのインストール",
+  "main": "firebase.js",
+  "dependencies": {
+    "firebase-admin": "^7.0.0",
+    "puppeteer": "^1.12.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winter-kc3/team-8-scraping.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/winter-kc3/team-8-scraping/issues"
+  },
+  "homepage": "https://github.com/winter-kc3/team-8-scraping#readme"
+}
