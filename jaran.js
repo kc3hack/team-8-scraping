@@ -31,7 +31,7 @@ async function jaran_category(url_path) {
         return dataList;
     });
     // console.log(scrapingData)
-    fs.writeFile('result.txt', JSON.stringify(scrapingData, null, "\t"), (err) => {
+    fs.appendFile('result.txt', JSON.stringify(scrapingData, null, "\t"), "utf8", (err) => {
         if (err) throw err
         console.log('done')
     });
@@ -39,4 +39,12 @@ async function jaran_category(url_path) {
     await brower.close()
 };
 
-jaran_category("https://www.jalan.net/kankou/pro_007/g2_35/?screenId=OUW380")
+const categoryList = {
+    "お城": "https://www.jalan.net/kankou/pro_007/g2_35/?screenId=OUW3801",
+    "神社, 寺": "https://www.jalan.net/kankou/pro_007/g1_20/?screenId=OUW3801",
+    "その他": "https://www.jalan.net/kankou/pro_007/g2_43/?screenId=OUW3801"
+}
+
+Object.keys(categoryList).forEach(key => {
+    jaran_category(categoryList[key])
+})
