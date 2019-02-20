@@ -29,7 +29,7 @@ const categoryList = {
 
 
 async function jaran_category(url_path) {
-    const brower = await puppeteer.launch({ args:['--no-sandbox','--disable-setuid-sandbox']/*headless: false, slowMo: 500*/ })
+    const brower = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox']/*headless: false, slowMo: 500*/ })
     const page = await brower.newPage()
     await page.goto(url_path)
 
