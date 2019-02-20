@@ -20,6 +20,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+// firestoreに書き込むコレクションを指定
 const writeCollection = { pages: "samplePages", paths: "samplePaths" }
 
 // じゃらんのカテゴリーページから要素を取得
@@ -39,13 +40,16 @@ async function jaranCategory(url_path) {
                 title: titleList[i].innerText,
                 url: "https:" + titleList[i].getAttribute("href")
             }
+            
             let img_path = imgList[i].getAttribute("src")
+            // LINE Message API は png, jpg の画像にしか対応していないのでそれ以外を弾く
             if (~img_path.indexOf("png") || ~img_path.indexOf("PNG") ||
                 ~img_path.indexOf("jpg") || ~img_path.indexOf("jpeg") || ~img_path.indexOf("JPG")) {
                 placeCard["img"] = "https:" + img_path
             }
             dataList.push(placeCard)
         }
+        // [{title: ◯◯, url: ◯◯, img: ◯◯}, ...]
         return dataList;
     });
 
