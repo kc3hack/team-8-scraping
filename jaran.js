@@ -1,10 +1,49 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const admin = require('firebase-admin');
+const env = require("./serviceAccountKey.json");
+const paths = require("./paths.json")
+const urls = require("/.urls.json")
+
+admin.initializeApp({
+    credential: admin.credential.cert({
+        type: env.type,
+        project_id: env.project_id,
+        project_key_id: env.project_key_id,
+        private_key: env.private_key.replace(/\\n/g, '\n'),
+        client_email: env.client_email,
+        client_id: env.client_id,
+        auth_url: env.auth_url,
+        token_url: env.token_url,
+        auth_provider_x509_cert_url: env.auth_provider_x509_cert_url,
+        client_x509_cert_url: env.client_x509_cert_url
+    })
+});
+
+const db = admin.firestore();
 
 const categoryList = {
-    "お城": "https://www.jalan.net/kankou/pro_007/g2_35/?screenId=OUW3801",
-    "神社,寺": "https://www.jalan.net/kankou/pro_007/g1_20/?screenId=OUW3801",
-    "遺跡,史跡": "https://www.jalan.net/kankou/pro_007/g2_30/?screenId=OUW3801",
+    "スイーツ": "https://www.jalan.net/gourmet/pro_007/g1_3G014/?screenId=OUW3801",
+    // "軽食": "https://www.jalan.net/gourmet/pro_007/g2_3g152/?screenId=OUW3801&rootCd=7743",
+    // "粉もの,鉄板": "https://www.jalan.net/gourmet/pro_007/g2_3g150/?screenId=OUW3801",
+    // "焼肉": "https://www.jalan.net/gourmet/pro_007/g2_3g080/?screenId=OUW3801&rootCd=7743",
+    // "ハンバーグ,ステーキ": "https://www.jalan.net/gourmet/pro_007/g2_3g050/?screenId=OUW1701&rootCd=7743&influxKbn=0",
+    // "しゃぶしゃぶ,すき焼き": "https://www.jalan.net/gourmet/pro_007/g2_3g043/?screenId=OUW3801&rootCd=7743",
+    // "寿司": "https://www.jalan.net/gourmet/pro_007/g2_3g042/?screenId=OUW3801&rootCd=7743",
+    // "魚-その他": "https://www.jalan.net/gourmet/pro_007/g2_3g012/?screenId=OUW3801&rootCd=7743",
+    // "そば,うどん": "https://www.jalan.net/gourmet/pro_007/g2_3g044/?screenId=OUW3801",
+    // "ラーメン": "https://www.jalan.net/gourmet/pro_007/g2_3g130/?screenId=OUW3801",
+    // "和食": "https://www.jalan.net/gourmet/pro_007/g2_3g040/?screenId=OUW3801",
+    // "中華": "https://www.jalan.net/gourmet/pro_007/g1_3G007/?screenId=OUW3801",
+    // "インド": "https://www.jalan.net/gourmet/pro_007/g2_3g091/?screenId=OUW3801&rootCd=7743",
+    // "タイ, ベトナム": "https://www.jalan.net/gourmet/pro_007/g2_3g090/?screenId=OUW3801&rootCd=7743",
+    // "フレンチ": "https://www.jalan.net/gourmet/pro_007/g2_3g061/?screenId=OUW3801",
+    // "イタリアン": "https://www.jalan.net/gourmet/pro_007/g2_3g060/?screenId=OUW3801",
+    // "その他洋食": "https://www.jalan.net/gourmet/pro_007/g2_3g051/?screenId=OUW3801",
+    // "その他": "https://www.jalan.net/gourmet/pro_007/g1_3G010/?screenId=OUW3801&rootCd=7743",
+    // "お城": "https://www.jalan.net/kankou/pro_007/g2_35/?screenId=OUW3801",
+    // "神社,寺": "https://www.jalan.net/kankou/pro_007/g1_20/?screenId=OUW3801",
+    // "遺跡,史跡": "https://www.jalan.net/kankou/pro_007/g2_30/?screenId=OUW3801",
     // "歴史文化-その他": "https://www.jalan.net/kankou/pro_007/g2_43/?screenId=OUW3801",
     // "景観,絶景": "https://www.jalan.net/kankou/pro_007/g1_22/?screenId=OUW3801",
     // "展望台,施設": "https://www.jalan.net/kankou/pro_007/g2_36/?screenId=OUW3801",
@@ -19,7 +58,7 @@ const categoryList = {
     // "登山": "https://www.jalan.net/kankou/pro_007/g2_M6/?screenId=OUW3801",
     // "キャンプ": "https://www.jalan.net/kankou/pro_007/g2_04/?screenId=OUW3801",
     // "スキー": "https://www.jalan.net/kankou/pro_007/g1_A3/?screenId=OUW3801",
-    // "海,川": ",https://www.jalan.net/kankou/pro_007/g1_A2/?screenId=OUW3801",
+    // "海,川": "https://www.jalan.net/kankou/pro_007/g1_A2/?screenId=OUW3801",
     // "施設": "https://www.jalan.net/kankou/pro_007/g1_04/page_8/?screenId=OUW1701&influxKbn=0",
     // "テーマパーク": "https://www.jalan.net/kankou/pro_007/g2_14/?screenId=OUW3801",
     // "体験": "https://www.jalan.net/kankou/pro_007/g1_06/?screenId=OUW3801",
@@ -28,7 +67,7 @@ const categoryList = {
 }
 
 
-async function jaran_category(url_path) {
+async function jaranCategory(url_path) {
     const brower = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox']/*headless: false, slowMo: 500*/ })
     const page = await brower.newPage()
     await page.goto(url_path)
@@ -47,16 +86,22 @@ async function jaran_category(url_path) {
         }
         return dataList;
     });
-    fs.appendFile('result.txt', JSON.stringify(scrapingData, null, "\t"), "utf8", (err) => {
-        if (err) throw err
-        console.log('done')
-    });
+    // fs.appendFile('result.txt', JSON.stringify(scrapingData, null, "\t"), "utf8", (err) => {
+    //     if (err) throw err
+    //     console.log('done')
+    // });
 
     await brower.close()
+    return scrapingData
 };
 
-// (async () => {
-Object.keys(categoryList).forEach(key => {
-    jaran_category(categoryList[key])
-})
-// })();
+
+(async () => {
+    for (key in categoryList) {
+        let jarr = await jaranCategory(categoryList[key]);
+
+        console.log(key)
+        console.log(jarr)
+    }
+})();
+
