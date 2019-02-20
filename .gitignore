@@ -1,3 +1,5 @@
 node_modules
 /result.txt
-*.json
+/paths.json
+/serviceAccountKey.json
+/urls.json
