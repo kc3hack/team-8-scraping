@@ -17,3 +17,10 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+
+let docRef = db.collection('users').add({
+    first: 'tukki',
+    last: 'fafa',
+    born: 1998
+});
+console.log("done")
