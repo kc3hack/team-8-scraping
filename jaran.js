@@ -18,19 +18,8 @@ async function jaran_category(url_path) {
             }
             dataList.push(listInList)
         }
-        // nodeList.forEach(_node => {
-        //     dataList.push(_node.innerText);
-        //     dataList.push(_node.getAttribute("href"))
-        // })
-        // imgList.forEach(_node => {
-        //     let img_path = _node.getAttribute("src")
-        //     if (~img_path.indexOf("png") || ~img_path.indexOf("jpg")) {
-        //         dataList.push("https:" + _node.getAttribute("src"))
-        //     }
-        // })
         return dataList;
     });
-    // console.log(scrapingData)
     fs.appendFile('result.txt', JSON.stringify(scrapingData, null, "\t"), "utf8", (err) => {
         if (err) throw err
         console.log('done')
