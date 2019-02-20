@@ -18,29 +18,33 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-let tmp = [{
-    "first": 'tatsudai',
-    "last": 'inagaki',
-    "born": 1999,
-},
-{
-    "first": 'kazuma',
-    "last": 'fujioka',
-    "born": 1999,
-}]
-// let tmp =
+// let tmp = [{
+//     "first": 'tatsudai',
+//     "last": 'inagaki',
+//     "born": 1999,
+// },
 // {
 //     "first": 'kazuma',
 //     "last": 'fujioka',
 //     "born": 1999,
-// }
-console.log(tmp)
-for (tm of tmp) {
-    let addDoc = db.collection('users').add(tm).then(ref => {
-        console.log('Added document with ID: ', ref.id);
-    });
-    console.log(addDoc)
+// }];
+let tmp =
+{
+    "first": 'kazuma',
+    "last": 'fujioka',
+    "born": 1999,
 }
+// let data = [];
+// (async () => {
+//     for (tm of tmp) {
+//         data.push(await db.collection('users').add(tm).then(ref => {
+//             return ref.id
+//         }))
+//     }
+//     await console.log(data)
+// })();
+db.collection("hogehoge").add(tmp)
+
 
 // let docRef = db.collection('users').add(tmp);
 // console.log("done")
