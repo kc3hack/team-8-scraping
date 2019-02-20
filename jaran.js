@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 
 async function jaran_category(url_path) {
-    const brower = await puppeteer.launch({ headless: false })
+    const brower = await puppeteer.launch({ headless: false, slowMo: 500 })
     const page = await brower.newPage()
     await page.goto(url_path)
 
