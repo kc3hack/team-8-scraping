@@ -20,6 +20,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+const writeCollection = { pages: "samplePages", paths: "samplePaths" }
 
 // じゃらんのカテゴリーページから要素を取得
 async function jaranCategory(url_path) {
@@ -52,11 +53,11 @@ async function jaranCategory(url_path) {
         let categoryData = await jaranCategory(urls[key]);
         let docList = []
         for (data of categoryData) {
-            docList.push(await db.collection('finalTmpPages').add(data).then(ref => {
-                return db.collection("finalTmpPages").doc(ref.id);
+            docList.push(await db.collection(writeCollection["pages"]).add(data).then(ref => {
+                return db.collection(writeCollection["pages"]).doc(ref.id);
             }))
         }
-        db.collection("finalTmpPaths").add({ "path": key, "hits": docList })
+        db.collection(writeCollection["paths"]).add({ "path": key, "hits": docList })
         console.log(key + "  done!")
     }
 })();
