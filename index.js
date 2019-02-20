@@ -24,18 +24,24 @@ const writeCollection = { pages: "samplePages", paths: "samplePaths" }
 
 // じゃらんのカテゴリーページから要素を取得
 async function jaranCategory(url_path) {
-    const brower = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], slowMo: 1000 })
+    const brower = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'], slowMo: 1000
+    })
     const page = await brower.newPage()
     await page.goto(url_path)
 
     const scrapingData = await page.evaluate(() => {
         const dataList = [];
-        const nodeList = document.querySelectorAll("p.item-name a");
+        const titleList = document.querySelectorAll("p.item-name a");
         const imgList = document.querySelectorAll(".item-mainImg img");
-        for (let i = 0, l = nodeList.length; i < l; i++) {
-            placeCard = { "title": nodeList[i].innerText, "url": "https:" + nodeList[i].getAttribute("href") }
+        for (let i = 0, l = titleList.length; i < l; i++) {
+            placeCard = {
+                title: titleList[i].innerText,
+                url: "https:" + titleList[i].getAttribute("href")
+            }
             let img_path = imgList[i].getAttribute("src")
-            if (~img_path.indexOf("png") || ~img_path.indexOf("PNG") || ~img_path.indexOf("jpg") || ~img_path.indexOf("jpeg") || ~img_path.indexOf("JPG")) {
+            if (~img_path.indexOf("png") || ~img_path.indexOf("PNG") ||
+                ~img_path.indexOf("jpg") || ~img_path.indexOf("jpeg") || ~img_path.indexOf("JPG")) {
                 placeCard["img"] = "https:" + img_path
             }
             dataList.push(placeCard)
@@ -57,7 +63,7 @@ async function jaranCategory(url_path) {
                 return db.collection(writeCollection["pages"]).doc(ref.id);
             }))
         }
-        db.collection(writeCollection["paths"]).add({ "path": key, "hits": docList })
+        db.collection(writeCollection["paths"]).add({ path: key, hits: docList })
         console.log(key + "  done!")
     }
 })();
